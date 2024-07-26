@@ -11,10 +11,16 @@ export const generateContacts = async (number) => {
   const dataAsString = JSON.stringify(users);
 
   try {
-    await fs.writeFile(PATH_DB, dataAsString, 'utf8');
-    console.log('Дані успішно записані у файл.');
+   const data = await fs.readFile(PATH_DB, { encoding: 'utf8' });
+    const existingContacts = JSON.parse(data);
+    existingContacts.push(dataAsString);
+
+await fs.writeFile(PATH_DB, JSON.stringify(existingContacts, null, 2), {
+  encoding: 'utf8',
+});
+
   } catch (err) {
-    console.error('Помилка запису у файл:', err);
+    console.error(err);
   }
 };
 

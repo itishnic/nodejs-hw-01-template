@@ -5,23 +5,21 @@ import { createFakeContact } from '../utils/createFakeContact.js';
 
 
 
-export const addOneContact = async (newContact) => {
-    try {
-      const data = await fs.readFile(PATH_DB, { encoding: 'utf8' });
-      const contacts = JSON.parse(data);
-      contacts.push(newContact); // Добавляем новый контакт в массив
-      await fs.writeFile(PATH_DB, JSON.stringify(contacts), 'utf8');
-      console.log('Контакт успешно добавлен.');
-    } catch (err) {
-      console.error('Ошибка при записи в файл:', err);
-    }
+export const addOneContact = async () => {
+  const myNewContact = faker.helpers.multiple(createFakeContact, {
+    count: 1,
+  });
+  try {
+    const data = await fs.readFile(PATH_DB, { encoding: 'utf8' });
+    const contacts = JSON.parse(data);
+    const updatedContacts = [...contacts, myNewContact];
+    await fs.writeFile(PATH_DB, JSON.stringify(updatedContacts), 'utf8');
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-const myNewContact =
-  faker.helpers.multiple(createFakeContact, {
-    count: 1,
-  })
-    ;
 
 
-addOneContact(myNewContact);
+
+addOneContact();
